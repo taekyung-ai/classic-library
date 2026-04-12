@@ -5,6 +5,8 @@ import { useState, useEffect } from 'react';
 const langs: Record<string, string> = {
   FRA: '프랑스어', ENG: '영어', RUS: '러시아어',
   GER: '독일어', SPA: '스페인어', ITA: '이탈리아어', JPN: '일본어',
+  CHN: '중국어', ARA: '아랍어', GRE: '그리스어', LAT: '라틴어',
+  NOR: '노르웨이어', DAN: '덴마크어', KOR: '한국어', PER: '페르시아어', HIN: '힌디어',
 };
 
 export default function Home() {
@@ -25,7 +27,6 @@ export default function Home() {
 
   return (
     <div style={{ minHeight: '100vh', background: '#F5F5F5', fontFamily: 'sans-serif' }}>
-      {/* 헤더 */}
       <header style={{ background: 'white', padding: '1rem 2rem', borderRadius: '0 0 24px 24px', boxShadow: '0 4px 20px rgba(0,0,0,0.06)' }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
@@ -40,7 +41,6 @@ export default function Home() {
         </div>
       </header>
 
-      {/* 검색 */}
       <div style={{ maxWidth: '600px', margin: '2rem auto', padding: '0 1rem' }}>
         <input
           type="text"
@@ -51,9 +51,8 @@ export default function Home() {
         />
       </div>
 
-      {/* 필터 */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem', display: 'flex', gap: '8px', flexWrap: 'wrap', marginBottom: '1.5rem' }}>
-        {['all', 'FRA', 'ENG', 'RUS', 'GER', 'SPA', 'ITA', 'JPN'].map(l => (
+        {['all', 'FRA', 'ENG', 'RUS', 'GER', 'SPA', 'ITA', 'JPN', 'CHN', 'ARA', 'GRE', 'LAT', 'NOR', 'DAN', 'KOR', 'PER', 'HIN'].map(l => (
           <button key={l} onClick={() => setFilter(l)} style={{
             padding: '8px 18px', fontSize: '13px', borderRadius: '20px', cursor: 'pointer', border: 'none',
             background: filter === l ? '#1a1a1a' : 'white',
@@ -66,7 +65,6 @@ export default function Home() {
         ))}
       </div>
 
-      {/* 책 목록 */}
       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 2rem 4rem', display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '16px' }}>
         {filtered.map(book => (
           <div key={book.id} onClick={() => setSelected(book)} style={{
@@ -79,7 +77,7 @@ export default function Home() {
           >
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '12px' }}>
               <span style={{ fontSize: '11px', color: '#999' }}>{book.year < 0 ? `BC ${Math.abs(book.year)}` : book.year}</span>
-              <span style={{ fontSize: '11px', padding: '3px 10px', background: '#F0F0F0', borderRadius: '10px', color: '#666' }}>{book.lang}</span>
+              <span style={{ fontSize: '11px', padding: '3px 10px', background: '#F0F0F0', borderRadius: '10px', color: '#666' }}>{langs[book.lang] || book.lang}</span>
             </div>
             <h3 style={{ fontSize: '16px', fontWeight: '600', marginBottom: '6px', color: '#1a1a1a', lineHeight: 1.4 }}>{book.title}</h3>
             <p style={{ fontSize: '13px', color: '#999', marginBottom: '12px', fontStyle: 'italic' }}>{book.titleEng}</p>
@@ -91,12 +89,11 @@ export default function Home() {
         ))}
       </div>
 
-      {/* 모달 */}
       {selected && (
         <div onClick={() => setSelected(null)} style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 50, padding: '1rem' }}>
           <div onClick={e => e.stopPropagation()} style={{ background: 'white', borderRadius: '24px', padding: '2rem', maxWidth: '500px', width: '100%', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem' }}>
-              <span style={{ fontSize: '12px', color: '#999' }}>{selected.year} · {langs[selected.lang]}</span>
+              <span style={{ fontSize: '12px', color: '#999' }}>{selected.year < 0 ? `BC ${Math.abs(selected.year)}` : selected.year} · {langs[selected.lang] || selected.lang}</span>
               <span onClick={() => setSelected(null)} style={{ cursor: 'pointer', fontSize: '20px', color: '#999' }}>✕</span>
             </div>
             <h2 style={{ fontSize: '24px', fontWeight: '700', marginBottom: '6px' }}>{selected.title}</h2>
