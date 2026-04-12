@@ -1,0 +1,30 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Book {
+  id          Int       @id @default(autoincrement())
+  title       String
+  titleEng    String
+  author      String
+  year        Int
+  born        Int
+  lang        String
+  free        Boolean   @default(true)
+  description String
+  content     String?
+  createdAt   DateTime  @default(now())
+}
+
+model Translation {
+  id        Int      @id @default(autoincrement())
+  bookId    Int
+  lang      String
+  content   String
+  status    String   @default("pending")
+  createdAt DateTime @default(now())
+}
