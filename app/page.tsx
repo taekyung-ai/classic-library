@@ -1,6 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useSession, signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 const langs: Record<string, string> = {
   FRA: '프랑스어', ENG: '영어', RUS: '러시아어',
@@ -14,6 +16,8 @@ export default function Home() {
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('all');
   const [selected, setSelected] = useState<any>(null);
+  const { data: session } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     fetch('/api/books').then(r => r.json()).then(setBooks);
@@ -33,10 +37,18 @@ export default function Home() {
             <h1 style={{ fontSize: '22px', fontWeight: '700', color: '#1a1a1a', margin: 0 }}>📚 Bibliotheca</h1>
             <p style={{ fontSize: '12px', color: '#999', margin: 0 }}>전세계 고전 문학 무료 아카이브</p>
           </div>
-          <nav style={{ display: 'flex', gap: '1rem', fontSize: '14px', color: '#666' }}>
+          <nav style={{ display: 'flex', gap: '1rem', fontSize: '14px', color: '#666', alignItems: 'center' }}>
             <span style={{ cursor: 'pointer', padding: '8px 16px', borderRadius: '20px', background: '#F0F0F0' }}>도서관</span>
             <span style={{ cursor: 'pointer', padding: '8px 16px', borderRadius: '20px' }}>번역</span>
             <span style={{ cursor: 'pointer', padding: '8px 16px', borderRadius: '20px' }}>소개</span>
+            {session ? (
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                <span style={{ fontSize: '13px', color: '#666' }}>{session.user?.name}님</span>
+                <button onClick={() => signOut()} style={{ padding: '8px 16px', borderRadius: '20px', border: 'none', background: '#1a1a1a', color: 'white', cursor: 'pointer', fontSize: '13px' }}>로그아웃</button>
+              </div>
+            ) : (
+              <button onClick={() => router.push('/auth/login')} style={{ padding: '8px 16px', borderRadius: '20px', border: 'none', background: '#1a1a1a', color: 'white', cursor: 'pointer', fontSize: '13px' }}>로그인</button>
+            )}
           </nav>
         </div>
       </header>
